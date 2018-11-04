@@ -1,0 +1,15 @@
+_start:
+ADDI a0,zero,1
+ADDI a1,zero,3
+jal func
+ADDI t1,a0,0
+
+j Exit
+
+func:	
+	myloop:
+	ADDI a0,a0,1
+	BNE a0,a1,myloop
+    jr ra 
+    
+Exit:
