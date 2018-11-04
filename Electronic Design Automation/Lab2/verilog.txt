@@ -1,0 +1,88 @@
+/* 
+ * Do not change Module name 
+*/
+module main;
+reg [5:0] i;
+wire [3:0] o;
+ 
+pop_count6bit count6(i[0],i[1],i[2],i[3],i[4],i[5],o[0],o[1],o[2],o[3]);
+  initial 
+    begin
+      //$display("Hello, World");
+      
+      
+       $monitor(o);
+      
+       i[0] = 1'b1;
+        i[1] = 1'b0;
+        i[2] = 1'b1;
+        i[3] = 1'b0;
+        i[4] = 1'b1;
+        i[5] = 1'b1;
+        #5
+        
+         i[0] = 1'b1;
+        i[1] = 1'b1;
+        i[2] = 1'b1;
+        i[3] = 1'b1;
+        i[4] = 1'b1;
+        i[5] = 1'b1;
+        #5
+      
+      $finish ;
+    end
+endmodule
+
+module pop_count6bit(
+    input i0,i1,i2,i3,i4,i5,
+    output o0,o1,o2,o3
+);
+    wire f1,f2,f3,f4,f5,f6,f7,f8,f9;
+    reg r0 = 1'b0;
+    fullAdder fa1(i0,i1,r0,f1,f2);
+    fullAdder fa2(i2,i3,r0,f3,f4);
+    CR2 CR2(f1,f2,f3,f4,r0,f5,f6,f7);
+    fullAdder fa3(i4,i5,r0,f8,f9);
+    CR3 CR3(f5,f6,f7,f8,f9,r0,r0,o0,o1,o2,o3);
+endmodule
+
+module CR3(
+    input a0,a1,a2,b0,b1,b2,cin,
+    output s0,s1,s2,cout
+);
+    wire c0,c1;
+    fullAdder fa1(a2,b2,c1,s2,cout);
+    fullAdder fa2(a1,b1,c0,s1,c1);
+    fullAdder fa3(a0,b0,cin,s0,c0);
+endmodule
+
+module CR2(
+    input a0,a1,b0,b1,cin,
+    output s0,s1,cout
+);
+    wire c0;
+    fullAdder fa1(a1,b1,c0,s1,cout);
+    fullAdder fa2(a0,b0,cin,s0,c0);
+endmodule
+
+module fullAdder(
+    input a,b,cin,
+    output s,cout
+);
+    wire f1,f2,f3;
+    halfAdder ha1(a,b,f2,f1);
+    halfAdder ha2(f2,cin,s,f3);
+    assign cout = f1 | f3;
+    
+endmodule
+
+module halfAdder(
+    input a,
+    input b,
+    output s,
+    output cout
+);
+    assign s = a ^ b;
+    assign cout = a & b;
+endmodule
+
